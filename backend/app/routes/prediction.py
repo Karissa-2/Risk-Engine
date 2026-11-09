@@ -1,0 +1,1 @@
+# Accepts network events, calls the scoring service, and returns risk predictions. Also retrieves previously calculated predictions.

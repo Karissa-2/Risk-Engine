@@ -1,11 +1,24 @@
 from fastapi import FastAPI
-from enum import Enum
+from pydantic import BaseModel
 
 # Providing the options for the model_name path parameter
-class ModelName(str, Enum):
-    alexnet = "alexnet"
-    resnet = "resnet"
-    lenet = "lenet"
+class NetworkEvent(BaseModel):
+    wrong_fragment: float
+    num_failed_logins: float
+    num_compromised: float
+    num_shells: float
+    srv_count: float
+    serror_rate: float
+    rerror_rate: float
+    same_srv_rate: float
+    dst_host_srv_count: float
+    dst_host_same_srv_rate: float
+    dst_host_same_src_port_rate: float
+    dst_host_serror_rate: float
+    dst_host_srv_serror_rate: float
+    flag: str
+    land: str
+    is_host_login: str
 
 # Create FastAPI instance
 # Add openapi_url later go to FastAPI defition to see how to add openapi_url
@@ -14,23 +27,26 @@ app = FastAPI(title="Risk Scoring Engnine API",
               version="1.0.0")
 
 # tells FastAPI that the function right below is in charge of handling requests that go to: the path / using a get operation
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
 
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/network-events/{srv_count}")
+def read_srv_count(srv_count: float):
+    return {"srv_count": srv_count}
 
 # 
-@app.get("/models/{model_name}")
-async def get_model(model_name: ModelName):
-    if model_name is ModelName.alexnet:
-    # Defining the response body
-        return {"model_name": model_name, "message": "Deep Learning FTW!"}
+@app.post("/network-event")
+def make_network_event(network_event: NetworkEvent):
+    print(network_event)
+    return {"message": "Network event received", "data": network_event.model_dump()}
 
-    if model_name.value == "lenet":
-        return {"model_name": model_name, "message": "LeCNN all the images"}
-
-    return {"model_name": model_name, "message": "Have some residuals"}
+@app.post("/predict")
+def predict(event: NetworkEvent):
+    # Temporary mock prediction
+    return {
+        "risk_probability": 0.75,
+        "risk_level": "High",
+        "prediction": 1,
+        "message": "Mock prediction for testing"
+    }
