@@ -1,0 +1,1 @@
+# Checks whether the API is running and responding correctly.
