@@ -17,7 +17,7 @@ categorical = [
 
 | Attribute | Line | Description |
 |----|---|-------|
-| flag | line 5 | connetions the computers send to eacch other |
+| flag | line 5 | connections the computers send to eacch other |
 | land | line 8 | LAND attack detects Denial of Service (DoS)|
 | wrong_fragment | line 9 | tampered or invalid pieces of an IP packet designed to confuse firewalls, bypass intrusion detection systems (IDS), or crash a target system during packet reassembly |
 | num_failed_logins | line 12 | the count of failed login attempts during a network connection |
