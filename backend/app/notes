@@ -1,1 +1,71 @@
-# no longer resembles what the model was trained on.
+# API
+
+## HTTP request methods (Main)
+| HTTP ethods | CRUD = | Primary Action |
+|-------------|--------|----------------|
+| **GET** | **R**ead | Retrieves data from a server without modifying anything. |
+| **POST** | **C**reate | Submits new data to a server to create a new resource. |
+| **PUT** | **U**pdate | Replaces an existing resource entirely with new data. |
+| **DELETE** | **D**elete | Removes a specified resource from the server. |
+
+## API routes & endpoints w main.py only
+main.py - where you can define your api
+    from fastapi import FastAPI
+    app = FASTAPI()
+
+### Create an endpoint
+    @app.(HTTP request method) ("/ endoint_name)
+    Ex. @app.get("/health")
+
+## API w routes in their own files
+Within that file you need
+
+    from fastapi import APIRouter
+    router = APIRouter()
+**Note**: router is just a variable name. It can be named anything.
+
+### Create an endpoint
+    @router.(HTTP request method) ("/ endpoint_name)
+    Ex. @router.get("/health")
+
+### Connect the routes files to main.py
+    from routes import (files) 
+    app.include_router(
+        (files).router
+        prefix= "/..."
+    )
+Repeat for each file in routes
+## Prefixes
+
+### Define prefixes within main.py
+    app.include_router(router, prefix="/whatever")
+
+### Define prefixes within route files
+    router = APIRouter(
+        prefix="/whatever"
+    )
+
+## Pydantic model/schema
+Defines the structure and validation rules for the data received & sent from the API
+
+### Example
+    from pydantic import BaseModel
+
+    class CoffeeOrder(BaseModel):
+        customer_name: str
+        coffee: str
+        quantity: int
+        price: float
+
+**Note**: BaseModel is a Pydantic class that provides data parsing and validation. The syntax for a single field is "Field : expected data type & restrictions"
+
+## Create an instance of our model
+    order = CoffeeOrder(
+        customer_name="Alex",
+        coffee="Latte",
+        quantity=2,
+        price=4.50
+    )
+Call the class and provide the inputs
+
+*Note*:Pydantic does automatic type conversion. You input '2' in a int, it will be coverted to 2.  
