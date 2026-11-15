@@ -68,4 +68,19 @@ Defines the structure and validation rules for the data received & sent from the
     )
 Call the class and provide the inputs
 
-*Note*:Pydantic does automatic type conversion. You input '2' in a int, it will be coverted to 2.  
+*Note*:Pydantic does automatic type conversion. You input '2' in a int, it will be coverted to 2. 'two' wouldn't be.
+
+
+## POST Methods
+### Get Pydantic Schema in your route file
+    from schemas.order import CoffeeOrder
+
+### Use it within your function 
+    def create_order(order: CoffeeOrder):
+**Note**: This is where Pydantic and FastAPI work together. Order is the function parameter. CoffeeOrder is the Pydantic schema. FastAPI recognizes that the incoming JSON should be validated against CoffeeOrder. If validation succeeds, FastAPI passes a CoffeeOrder object to the function.
+
+### Accessing Pydantic attributes
+    order.customer_name
+    order.coffee
+    order.quantity
+    order.price

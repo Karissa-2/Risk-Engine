@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .api.routes import health, predictions
+from .api.routes import health, predictions, orders
 
 # Create FastAPI instance
 # Add openapi_url later go to FastAPI defition to see how to add openapi_url
@@ -22,9 +22,8 @@ app.include_router(
     prefix="/api/v1"
 )
 
-
-
-
-
-
+app.include_router(
+    orders.router,
+    prefix="/api/v1"
+)
 
