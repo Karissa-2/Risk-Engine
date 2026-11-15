@@ -1,4 +1,3 @@
-from xml.parsers.expat import model
 import numpy as np
 from sklearn.metrics import log_loss, brier_score_loss
 import matplotlib.pyplot as plt
@@ -113,22 +112,22 @@ def reliability_grid(panels, title=""):
 
 #Combines all the functions above to create one full report for the model.
 #Call this function in the jupyter notebook to get the calibration report for the model.
-    def calibration_report(name, model, X, y_true, bins=10, plot=True):
-        """Run all calibration metrics (and optionally the reliability plot) for a fitted model."""
-        if not hasattr(model, "predict_proba") or not hasattr(model, "classes_"):
-            raise ValueError("model must be fitted and expose predict_proba() and classes_")
+def calibration_report(name, model, X, y_true, bins=10, plot=True):
+    """Run all calibration metrics (and optionally the reliability plot) for a fitted model."""
+    if not hasattr(model, "predict_proba") or not hasattr(model, "classes_"):
+        raise ValueError("model must be fitted and expose predict_proba() and classes_")
 
-        probabilities = np.asarray(model.predict_proba(X))
-        classes = list(model.classes_)
+    probabilities = np.asarray(model.predict_proba(X))
+    classes = list(model.classes_)
 
-        if len(classes) == 2:
-            p_pos = probabilities[:, 1]
-            y_bin = (np.asarray(y_true) == classes[1]).astype(int)
-            metrics = report_binary(name, y_bin, p_pos, bins)
-            if plot:
+    if len(classes) == 2:
+        p_pos = probabilities[:, 1]
+        y_bin = (np.asarray(y_true) == classes[1]).astype(int)
+        metrics = report_binary(name, y_bin, p_pos, bins)
+        if plot:
                 reliability_grid({name: {"model": (y_bin, p_pos)}},
                                 title=f"Reliability Diagram: {name}")
-        else:
+    else:
             metrics = evaluate_multiclass_model(name, model, X, y_true, bins)
 
-        return metrics
+    return metrics
