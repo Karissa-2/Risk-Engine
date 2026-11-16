@@ -1,17 +1,18 @@
 # Accepts network events, calls the scoring service, and returns risk predictions. Also retrieves previously calculated predictions.
 
 from fastapi import APIRouter
-from ...schemas.events import NetworkEvent
+from ...schemas.events import NetworkEvent, PredictionResponse
 
 # Allows the endpoint to be defined outside main.py
 router = APIRouter(prefix="/predictions", tags=["predictions"])
 
-#use @router.get instead of @app.get to define the endpoint
+# use @router.get instead of @app.get to define the endpoint
 @router.get("/")
 def get_predictions():
     return {"prediction": "threat detected"}
 
 @router.post("/predict")
+# , response_model=PredictionResponse
 def create_prediction(network_event: NetworkEvent):
     return {"message": "Event received", 
             "duration": network_event.duration,

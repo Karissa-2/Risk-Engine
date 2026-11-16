@@ -71,7 +71,7 @@ Call the class and provide the inputs
 *Note*:Pydantic does automatic type conversion. You input '2' in a int, it will be coverted to 2. 'two' wouldn't be.
 
 
-## POST Methods
+# Pydantic
 ### Get Pydantic Schema in your route file
     from schemas.order import CoffeeOrder
 
@@ -84,3 +84,42 @@ Call the class and provide the inputs
     order.coffee
     order.quantity
     order.price
+
+### Field()
+to define additional validation constraints.
+| Constraint | Meaning | Example |
+|------------|---------|---------|
+| gt=0 | Greater than 0 | 1, 2, 3 |
+| ge=0 | Greater than or equal to 0 | 0, 1, 2 |
+| lt=10 | Less than 10 | 1 through 9 for integers |
+| le=10 | Less than or equal to 10 | 1 through 10 for positive integers |
+| min_length=2 | At least 2 characters| "Al" |
+| max_length=50 | At most 50 characters| "Alex" |
+
+## Validate outgoing reponse
+    @router.post(
+    "/",
+    response_model=CoffeeOrderResponse,
+    status_code=201
+    )
+
+
+## HTTPS Status Codes
+| Status | Meaning | Example |
+|------------|---------|---------|
+| 200 | OK | Request completed successfully |
+| 201 | Created | New order successfully created |
+| 400 | Bad Request | Server rejects an invalid request |
+| 404 | Not Found | Requested order doesn't exist |
+| 422 | Unprocessable Content | Incoming JSON fails schema validation |
+| 500 | Internal Server Error | Unexpected server-side problem |
+|  |  |  |
+
+# SQLAlchemy ORM Models
+    from sqlalchemy import String
+    from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+## Base class
+    class Base(DeclarativeBase):
+        pass
+DeclarativeBase provides the foundation for defining mapped ORM classes.
