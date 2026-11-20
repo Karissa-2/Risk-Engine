@@ -1,0 +1,46 @@
+
+risk-scoring-engine/
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── api/
+│   │   │   └── routes/
+│   │   │       ├── health.py
+│   │   │       ├── predictions.py
+│   │   │       ├── outcomes.py
+│   │   │       └── drift.py
+│   │   ├── schemas/
+│   │   │   ├── event.py
+│   │   │   └── prediction.py
+│   │   ├── services/
+│   │   │   ├── scoring_service.py
+│   │   │   ├── uncertainty_service.py
+│   │   │   ├── possibility_service.py
+│   │   │   ├── drift_service.py
+│   │   │   └── decision_service.py
+│   │   ├── ml/
+│   │   │   ├── preprocessing.py
+│   │   │   ├── model_loader.py
+│   │   │   └── calibration.py
+│   │   ├── db/
+│   │   │   ├── database.py
+│   │   │   └── models.py
+│   │   └── core/
+│   │       └── config.py
+│   ├── artifacts/
+│   ├── tests/
+│   ├── requirements.txt
+│   ├── .env.example
+│   └── Dockerfile
+├── data/
+│   ├── raw/
+│   └── processed/
+├── training/
+│   ├── prepare_data.py
+│   ├── train_baseline.py
+│   ├── calibrate_model.py
+│   └── evaluate.py
+├── frontend/
+├── docs/
+├── .gitignore
+└── README.md

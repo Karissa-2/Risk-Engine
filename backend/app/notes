@@ -1,1 +1,125 @@
-# no longer resembles what the model was trained on.
+# API
+
+## HTTP request methods (Main)
+| HTTP ethods | CRUD = | Primary Action |
+|-------------|--------|----------------|
+| **GET** | **R**ead | Retrieves data from a server without modifying anything. |
+| **POST** | **C**reate | Submits new data to a server to create a new resource. |
+| **PUT** | **U**pdate | Replaces an existing resource entirely with new data. |
+| **DELETE** | **D**elete | Removes a specified resource from the server. |
+
+## API routes & endpoints w main.py only
+main.py - where you can define your api
+    from fastapi import FastAPI
+    app = FASTAPI()
+
+### Create an endpoint
+    @app.(HTTP request method) ("/ endoint_name)
+    Ex. @app.get("/health")
+
+## API w routes in their own files
+Within that file you need
+
+    from fastapi import APIRouter
+    router = APIRouter()
+**Note**: router is just a variable name. It can be named anything.
+
+### Create an endpoint
+    @router.(HTTP request method) ("/ endpoint_name)
+    Ex. @router.get("/health")
+
+### Connect the routes files to main.py
+    from routes import (files) 
+    app.include_router(
+        (files).router
+        prefix= "/..."
+    )
+Repeat for each file in routes
+## Prefixes
+
+### Define prefixes within main.py
+    app.include_router(router, prefix="/whatever")
+
+### Define prefixes within route files
+    router = APIRouter(
+        prefix="/whatever"
+    )
+
+## Pydantic model/schema
+Defines the structure and validation rules for the data received & sent from the API
+
+### Example
+    from pydantic import BaseModel
+
+    class CoffeeOrder(BaseModel):
+        customer_name: str
+        coffee: str
+        quantity: int
+        price: float
+
+**Note**: BaseModel is a Pydantic class that provides data parsing and validation. The syntax for a single field is "Field : expected data type & restrictions"
+
+## Create an instance of our model
+    order = CoffeeOrder(
+        customer_name="Alex",
+        coffee="Latte",
+        quantity=2,
+        price=4.50
+    )
+Call the class and provide the inputs
+
+*Note*:Pydantic does automatic type conversion. You input '2' in a int, it will be coverted to 2. 'two' wouldn't be.
+
+
+# Pydantic
+### Get Pydantic Schema in your route file
+    from schemas.order import CoffeeOrder
+
+### Use it within your function 
+    def create_order(order: CoffeeOrder):
+**Note**: This is where Pydantic and FastAPI work together. Order is the function parameter. CoffeeOrder is the Pydantic schema. FastAPI recognizes that the incoming JSON should be validated against CoffeeOrder. If validation succeeds, FastAPI passes a CoffeeOrder object to the function.
+
+### Accessing Pydantic attributes
+    order.customer_name
+    order.coffee
+    order.quantity
+    order.price
+
+### Field()
+to define additional validation constraints.
+| Constraint | Meaning | Example |
+|------------|---------|---------|
+| gt=0 | Greater than 0 | 1, 2, 3 |
+| ge=0 | Greater than or equal to 0 | 0, 1, 2 |
+| lt=10 | Less than 10 | 1 through 9 for integers |
+| le=10 | Less than or equal to 10 | 1 through 10 for positive integers |
+| min_length=2 | At least 2 characters| "Al" |
+| max_length=50 | At most 50 characters| "Alex" |
+
+## Validate outgoing reponse
+    @router.post(
+    "/",
+    response_model=CoffeeOrderResponse,
+    status_code=201
+    )
+
+
+## HTTPS Status Codes
+| Status | Meaning | Example |
+|------------|---------|---------|
+| 200 | OK | Request completed successfully |
+| 201 | Created | New order successfully created |
+| 400 | Bad Request | Server rejects an invalid request |
+| 404 | Not Found | Requested order doesn't exist |
+| 422 | Unprocessable Content | Incoming JSON fails schema validation |
+| 500 | Internal Server Error | Unexpected server-side problem |
+|  |  |  |
+
+# SQLAlchemy ORM Models
+    from sqlalchemy import String
+    from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+## Base class
+    class Base(DeclarativeBase):
+        pass
+DeclarativeBase provides the foundation for defining mapped ORM classes.

@@ -4,3 +4,4 @@ node_modules/
 *$py.class
 .venv/
 .DS_Store
+.env
